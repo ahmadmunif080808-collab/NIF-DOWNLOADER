@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NIFFF DOWNLOADER</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#101522;
+  color:white;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+.container{
+  width:100%;
+  max-width:480px;
+  background:#1b2435;
+  padding:25px;
+  border-radius:18px;
+  border:1px solid #35415a;
+}
+.logo{
+  text-align:center;
+  font-size:27px;
+  font-weight:bold;
+  color:#62a5ff;
+}
+.subtitle{
+  text-align:center;
+  color:#aab6ca;
+  margin:10px 0 28px;
+}
+label{
+  display:block;
+  margin:16px 0 8px;
+}
+input,select{
+  width:100%;
+  padding:14px;
+  border-radius:10px;
+  border:1px solid #46536b;
+  background:#101522;
+  color:white;
+  font-size:15px;
+}
+button{
+  width:100%;
+  padding:15px;
+  margin-top:20px;
+  border:0;
+  border-radius:10px;
+  background:#2678ed;
+  color:white;
+  font-weight:bold;
+  font-size:16px;
+}
+.info{
+  color:#aab6ca;
+  font-size:13px;
+  line-height:1.6;
+  margin-top:20px;
+  text-align:center;
+}
+#message{
+  margin-top:15px;
+  text-align:center;
+  color:#ffcc75;
+  font-size:14px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="logo">NIFFF DOWNLOADER</div>
+  <p class="subtitle">Simple • Fast • Easy</p>
+
+  <label for="url">Masukkan URL konten</label>
+  <input id="url" type="url"
+    placeholder="https://contoh.com/video">
+
+  <label for="format">Pilih format</label>
+  <select id="format">
+    <option value="mp4">Video MP4</option>
+    <option value="mp3">Audio MP3</option>
+  </select>
+
+  <button onclick="downloadFile()">MULAI DOWNLOAD</button>
+
+  <div id="message">
+    Tampilan website siap. Mesin download belum terhubung.
+  </div>
+
+  <p class="info">
+    Gunakan hanya untuk konten milik sendiri atau yang
+    kamu punya izin untuk mengunduhnya.
+  </p>
+</div>
+
+<script>
+function downloadFile(){
+  const url=document.getElementById("url").value.trim();
+  const message=document.getElementById("message");
+
+  if(!url){
+    message.textContent="Masukkan URL terlebih dahulu.";
+    return;
+  }
+
+  try{
+    const parsed=new URL(url);
+    if(!["http:","https:"].includes(parsed.protocol)){
+      throw new Error();
+    }
+  }catch(e){
+    message.textContent="URL tidak valid.";
+    return;
+  }
+
+  message.textContent=
+    "Tampilan sudah siap, tetapi backend download belum dipasang.";
+}
+</script>
+</body>
+</html>
