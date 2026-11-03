@@ -2,128 +2,74 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NIFFF DOWNLOADER</title>
 <style>
 *{box-sizing:border-box}
 body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#101522;
-  color:white;
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:20px;
+  margin:0;background:#101522;color:white;
+  font-family:Arial,sans-serif;min-height:100vh;
+  display:grid;place-items:center;padding:20px
 }
 .container{
-  width:100%;
-  max-width:480px;
-  background:#1b2435;
-  padding:25px;
-  border-radius:18px;
-  border:1px solid #35415a;
+  width:100%;max-width:480px;background:#1b2435;
+  padding:25px;border-radius:18px;
+  border:1px solid #35415a
 }
-.logo{
-  text-align:center;
-  font-size:27px;
-  font-weight:bold;
-  color:#62a5ff;
-}
-.subtitle{
-  text-align:center;
-  color:#aab6ca;
-  margin:10px 0 28px;
-}
-label{
-  display:block;
-  margin:16px 0 8px;
+h2{text-align:center;color:#62a5ff}
+p{text-align:center;color:#aab6ca}
+label{display:block;margin:18px 0 8px}
+input,select,button{
+  width:100%;padding:14px;border-radius:10px;font-size:15px
 }
 input,select{
-  width:100%;
-  padding:14px;
-  border-radius:10px;
-  border:1px solid #46536b;
-  background:#101522;
-  color:white;
-  font-size:15px;
+  background:#101522;color:white;border:1px solid #46536b
 }
 button{
-  width:100%;
-  padding:15px;
-  margin-top:20px;
-  border:0;
-  border-radius:10px;
-  background:#2678ed;
-  color:white;
-  font-weight:bold;
-  font-size:16px;
+  margin-top:20px;background:#2678ed;color:white;
+  border:0;font-weight:bold
 }
-.info{
-  color:#aab6ca;
-  font-size:13px;
-  line-height:1.6;
-  margin-top:20px;
-  text-align:center;
-}
-#message{
-  margin-top:15px;
-  text-align:center;
-  color:#ffcc75;
-  font-size:14px;
-}
+#message{margin-top:16px;text-align:center;color:#ffcc75}
 </style>
 </head>
 <body>
 <div class="container">
-  <div class="logo">NIFFF DOWNLOADER</div>
-  <p class="subtitle">Simple • Fast • Easy</p>
+  <h2>NIFFF DOWNLOADER</h2>
+  <p>Simple • Fast • Easy</p>
 
-  <label for="url">Masukkan URL konten</label>
-  <input id="url" type="url"
-    placeholder="https://contoh.com/video">
-
-  <label for="format">Pilih format</label>
-  <select id="format">
-    <option value="mp4">Video MP4</option>
-    <option value="mp3">Audio MP3</option>
-  </select>
+  <label for="url">Link file yang boleh diunduh</label>
+  <input id="url" type="url" placeholder="https://contoh.com/file.mp4">
 
   <button onclick="downloadFile()">MULAI DOWNLOAD</button>
-
-  <div id="message">
-    Tampilan website siap. Mesin download belum terhubung.
-  </div>
-
-  <p class="info">
-    Gunakan hanya untuk konten milik sendiri atau yang
-    kamu punya izin untuk mengunduhnya.
-  </p>
+  <div id="message">Siap digunakan untuk link file langsung.</div>
+  <p>Gunakan hanya file milik sendiri atau yang diizinkan pemiliknya.</p>
 </div>
 
 <script>
 function downloadFile(){
-  const url=document.getElementById("url").value.trim();
+  const input=document.getElementById("url");
   const message=document.getElementById("message");
 
-  if(!url){
-    message.textContent="Masukkan URL terlebih dahulu.";
-    return;
-  }
-
+  let file;
   try{
-    const parsed=new URL(url);
-    if(!["http:","https:"].includes(parsed.protocol)){
-      throw new Error();
-    }
+    file=new URL(input.value.trim());
+    if(file.protocol!=="https:") throw new Error();
   }catch(e){
-    message.textContent="URL tidak valid.";
+    message.textContent="Masukkan link HTTPS yang valid.";
     return;
   }
 
-  message.textContent=
-    "Tampilan sudah siap, tetapi backend download belum dipasang.";
+  message.textContent="Membuka link file...";
+
+  const link=document.createElement("a");
+  link.href=file.href;
+  link.target="_blank";
+  link.rel="noopener noreferrer";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  message.textContent="Link file sudah dibuka. Jika tidak terunduh otomatis, gunakan tombol download dari halaman file.";
 }
 </script>
 </body>
