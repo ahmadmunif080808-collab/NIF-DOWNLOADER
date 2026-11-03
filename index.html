@@ -3,73 +3,116 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NIFFF DOWNLOADER</title>
+<title>NIFFF DOWNLOADER V3</title>
 <style>
 *{box-sizing:border-box}
 body{
-  margin:0;background:#101522;color:white;
-  font-family:Arial,sans-serif;min-height:100vh;
-  display:grid;place-items:center;padding:20px
+  margin:0;min-height:100vh;padding:22px;
+  display:grid;place-items:center;
+  background:#0b1020;color:#fff;
+  font-family:Arial,sans-serif
 }
 .container{
-  width:100%;max-width:480px;background:#1b2435;
-  padding:25px;border-radius:18px;
-  border:1px solid #35415a
+  width:100%;max-width:490px;padding:26px;
+  background:#172238;border:1px solid #34445f;
+  border-radius:20px;box-shadow:0 15px 50px #0006
 }
-h2{text-align:center;color:#62a5ff}
-p{text-align:center;color:#aab6ca}
-label{display:block;margin:18px 0 8px}
-input,select,button{
-  width:100%;padding:14px;border-radius:10px;font-size:15px
-}
-input,select{
-  background:#101522;color:white;border:1px solid #46536b
+.logo{text-align:center;color:#62a5ff;font-size:27px;font-weight:bold}
+.subtitle{text-align:center;color:#aab6ca;margin:10px 0 25px}
+label{display:block;margin:17px 0 9px;font-size:14px}
+select,input{
+  width:100%;padding:14px;border-radius:10px;
+  background:#0b1020;color:white;
+  border:1px solid #43516b;font-size:15px
 }
 button{
-  margin-top:20px;background:#2678ed;color:white;
-  border:0;font-weight:bold
+  width:100%;padding:15px;margin-top:20px;
+  background:#2678ed;color:white;border:0;
+  border-radius:10px;font-size:16px;font-weight:bold
 }
-#message{margin-top:16px;text-align:center;color:#ffcc75}
+button:disabled{opacity:.5}
+#message{
+  text-align:center;margin-top:17px;
+  color:#ffcf80;font-size:14px;line-height:1.5
+}
+.info{
+  color:#9eacc3;text-align:center;
+  font-size:12px;line-height:1.6;margin-top:23px
+}
 </style>
 </head>
 <body>
-<div class="container">
-  <h2>NIFFF DOWNLOADER</h2>
-  <p>Simple • Fast • Easy</p>
+<main class="container">
+  <div class="logo">NIFFF DOWNLOADER</div>
+  <p class="subtitle">V3 • Simple • Fast • Easy</p>
 
-  <label for="url">Link file yang boleh diunduh</label>
-  <input id="url" type="url" placeholder="https://contoh.com/file.mp4">
+  <label for="platform">Pilih platform</label>
+  <select id="platform">
+    <option value="youtube">YouTube</option>
+    <option value="tiktok">TikTok</option>
+    <option value="instagram">Instagram</option>
+    <option value="facebook">Facebook</option>
+    <option value="direct">Link file langsung</option>
+  </select>
 
-  <button onclick="downloadFile()">MULAI DOWNLOAD</button>
-  <div id="message">Siap digunakan untuk link file langsung.</div>
-  <p>Gunakan hanya file milik sendiri atau yang diizinkan pemiliknya.</p>
-</div>
+  <label for="format">Pilih format</label>
+  <select id="format">
+    <option value="mp4">Video MP4</option>
+    <option value="mp3">Audio MP3</option>
+  </select>
+
+  <label for="url">Masukkan link</label>
+  <input id="url" type="url" placeholder="Tempel link di sini">
+
+  <button id="download" onclick="startDownload()">
+    MULAI DOWNLOAD
+  </button>
+
+  <div id="message">
+    Website siap. Hubungkan backend untuk mengaktifkan proses download.
+  </div>
+
+  <p class="info">
+    Gunakan hanya konten milik sendiri atau yang kamu punya izin untuk mengunduhnya.
+    Fitur download platform memerlukan dukungan resmi dan backend.
+  </p>
+</main>
 
 <script>
-function downloadFile(){
-  const input=document.getElementById("url");
+function startDownload(){
+  const platform=document.getElementById("platform").value;
+  const format=document.getElementById("format").value;
+  const url=document.getElementById("url").value.trim();
   const message=document.getElementById("message");
 
-  let file;
-  try{
-    file=new URL(input.value.trim());
-    if(file.protocol!=="https:") throw new Error();
-  }catch(e){
-    message.textContent="Masukkan link HTTPS yang valid.";
+  if(!url){
+    message.textContent="Masukkan link terlebih dahulu.";
     return;
   }
 
-  message.textContent="Membuka link file...";
+  let parsed;
+  try{
+    parsed=new URL(url);
+    if(!["http:","https:"].includes(parsed.protocol)){
+      throw new Error();
+    }
+  }catch(e){
+    message.textContent="Link tidak valid.";
+    return;
+  }
 
-  const link=document.createElement("a");
-  link.href=file.href;
-  link.target="_blank";
-  link.rel="noopener noreferrer";
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
+  if(platform==="direct"){
+    if(parsed.protocol!=="https:"){
+      message.textContent="Gunakan link HTTPS.";
+      return;
+    }
+    message.textContent="Membuka link file. Pastikan file tersebut memang diizinkan untuk diunduh.";
+    window.open(parsed.href,"_blank","noopener,noreferrer");
+    return;
+  }
 
-  message.textContent="Link file sudah dibuka. Jika tidak terunduh otomatis, gunakan tombol download dari halaman file.";
+  message.textContent=
+    "Pilihan "+platform.toUpperCase()+" ("+format.toUpperCase()+") diterima. Backend resmi belum terhubung, jadi download belum dapat diproses.";
 }
 </script>
 </body>
